@@ -56,6 +56,7 @@ public class Lexer {
         while (optCh.isPresent() && Digit.isDigit(optCh.get())) {
             digits.add(new DigitLexem(point, point.move(1)));
             point = point.move(1);
+            optCh = point.get();
         }
 
         return new NumberLexem(begin, begin.move(digits.size()), digits);
