@@ -26,7 +26,7 @@ var y_1 = "y"
 
 * Строки
 ```
-"string"
+"string" // escape ????
 ```
 
 * Булев
@@ -53,3 +53,14 @@ arr.foreach(x -> {
 })
 
 ```
+
+* Функции
+
+```
+var f = func(arg1, arg2) {
+    return arg1 + arg2
+}
+
+f(arg1, arg2)
+```
+
