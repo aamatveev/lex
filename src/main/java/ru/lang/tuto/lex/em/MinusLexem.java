@@ -7,4 +7,9 @@ public class MinusLexem extends Lexem {
     public MinusLexem(Pointer<Character> begin, Pointer<Character> end) {
         super(begin, end);
     }
+
+    @Override
+    public String toString() {
+        return "MinusLexem{}";
+    }
 }

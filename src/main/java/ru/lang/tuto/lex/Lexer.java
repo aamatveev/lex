@@ -10,22 +10,9 @@ import java.util.List;
 
 public class Lexer {
 
-    private List<Character> chars = new ArrayList<>();
-
-    public static void main(String[] args) throws InvalidSymbolException, CloneNotSupportedException {
-        Lexer lexer = new Lexer();
-        String sourceCode = "15555 + 88882";
-
-        var lexems = lexer.parseLexems(sourceCode);
-        System.out.println(sourceCode);
-        for (var t : lexems) {
-            System.out.println(t);
-        }
-    }
-
     public List<Lexem> parseLexems(String source) throws InvalidSymbolException, CloneNotSupportedException {
         List<Lexem> lexems = new ArrayList<>();
-        chars = CharUtils.toChars(source);
+        List<Character> chars = CharUtils.toChars(source);
         Lexem lexem = null;
         do {
             if (lexem == null) {
@@ -41,27 +28,32 @@ public class Lexer {
     }
 
     public Lexem parseLexem(Pointer<Character> from) throws InvalidSymbolException, CloneNotSupportedException {
-        if (! from.get().isPresent()) return null;
-        switch (from.get().get()) {
-            case ' ':
-                return makeWhiteSpace(from);
-            case '0': case '1': case '2': case '3': case '4':
-            case '5': case '6': case '7': case '8': case '9':
-                return makeNumber(from);
-            case '+':
-                return makePlus(from);
-            case '-':
-                return makeMinus(from);
-            default:
-                throw new InvalidSymbolException("SYMBOL '" + from.lookup(1) + "' at " + from.getPosition() + " position unsupported");
+        var optCh = from.get();
+        if (optCh.isPresent()) {
+            var ch = optCh.get();
+            switch (ch) {
+                case ' ':
+                    return makeWhiteSpace(from);
+                case '0': case '1': case '2': case '3': case '4':
+                case '5': case '6': case '7': case '8': case '9':
+                    return makeNumber(from);
+                case '+':
+                    return makePlus(from);
+                case '-':
+                    return makeMinus(from);
+                default:
+                    throw new InvalidSymbolException("SYMBOL '" + from.lookup(1) + "' at " + from.getPosition() + " position unsupported");
+            }
         }
+        return null;
     }
 
-    private Lexem makeNumber(Pointer<Character> begin) throws CloneNotSupportedException, InvalidSymbolException {
+    private Lexem makeNumber(Pointer<Character> begin) throws CloneNotSupportedException {
 
         List<DigitLexem> digits = new ArrayList<>();
         var point = begin;
-        while (point.get().isPresent() && Digit.isDigit(point.get().get())) {
+        var optCh = point.get();
+        while (optCh.isPresent() && Digit.isDigit(optCh.get())) {
             digits.add(new DigitLexem(point, point.move(1)));
             point = point.move(1);
         }
